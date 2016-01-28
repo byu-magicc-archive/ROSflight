@@ -42,6 +42,9 @@
 #include "drivers/accgyro_l3gd20.h"
 #include "drivers/accgyro_lsm303dlhc.h"
 
+#include "drivers/airspeed.h"
+#include "drivers/airspeed_ms4525.h"
+
 #include "drivers/bus_spi.h"
 #include "drivers/accgyro_spi_mpu6000.h"
 #include "drivers/accgyro_spi_mpu6500.h"
@@ -61,6 +64,7 @@
 
 #include "sensors/sensors.h"
 #include "sensors/acceleration.h"
+#include "sensors/airspeed.h"
 #include "sensors/barometer.h"
 #include "sensors/gyro.h"
 #include "sensors/compass.h"
@@ -76,6 +80,7 @@ extern float magneticDeclination;
 extern gyro_t gyro;
 extern baro_t baro;
 extern acc_t acc;
+extern airspeed_t airspeed;
 
 uint8_t detectedSensors[MAX_SENSORS_TO_DETECT] = { GYRO_NONE, ACC_NONE, BARO_NONE, MAG_NONE };
 
@@ -514,6 +519,40 @@ static void detectBaro(baroSensor_e baroHardwareToUse)
 #endif
 }
 
+static void detectAirspeed(airspeedSensor_e airspeedHardwareToUse)
+{
+#ifndef AIRSPEED
+    UNUSED(airspeedHardwareToUse);
+#else
+    // Detect what differential pressure sensors are available. airspeed->read() is set to sensor-specific update function
+
+    airspeedSensor_e airspeedHardware = airspeedHardwareToUse;
+
+    switch (airspeedHardware) {
+        case AIRSPEED_DEFAULT:
+            ; // fallthough
+
+        case AIRSPEED_MS4525:
+#ifdef USE_AIRSPEED_MS4525
+            if (ms4525Detect(&airspeed)) {
+                airspeedHardware = AIRSPEED_MS4525;
+                break;
+            }
+#endif
+        case AIRSPEED_NONE:
+            airspeedHardware = AIRSPEED_NONE;
+            break;
+    }
+
+    if (airspeedHardware == AIRSPEED_NONE) {
+        return;
+    }
+
+    detectedSensors[SENSOR_INDEX_AIRSPEED] = airspeedHardware;
+    sensorsSet(SENSOR_AIRSPEED);
+#endif
+}
+
 static void detectMag(magSensor_e magHardwareToUse)
 {
     magSensor_e magHardware;
@@ -650,6 +689,7 @@ bool sensorsAutodetect(sensorAlignmentConfig_t *sensorAlignmentConfig, uint16_t 
     }
     detectAcc(accHardwareToUse);
     detectBaro(baroHardwareToUse);
+    detectAirspeed(AIRSPEED_DEFAULT);
 
 
     // Now time to init things, acc first

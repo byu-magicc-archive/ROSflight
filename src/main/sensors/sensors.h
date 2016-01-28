@@ -21,10 +21,11 @@ typedef enum {
     SENSOR_INDEX_GYRO = 0,
     SENSOR_INDEX_ACC,
     SENSOR_INDEX_BARO,
-    SENSOR_INDEX_MAG
+    SENSOR_INDEX_MAG,
+    SENSOR_INDEX_AIRSPEED = 7
 } sensorIndex_e;
 
-#define MAX_SENSORS_TO_DETECT (SENSOR_INDEX_MAG + 1)
+#define MAX_SENSORS_TO_DETECT (SENSOR_INDEX_AIRSPEED + 1)
 
 extern uint8_t detectedSensors[MAX_SENSORS_TO_DETECT];
 
@@ -51,6 +52,7 @@ typedef enum {
     SENSOR_SONAR = 1 << 4,
     SENSOR_GPS = 1 << 5,
     SENSOR_GPSMAG = 1 << 6,
+    SENSOR_AIRSPEED = 1 << 7,
 } sensors_e;
 
 typedef enum {

@@ -46,6 +46,7 @@
 #include "sensors/barometer.h"
 #include "sensors/gyro.h"
 #include "sensors/battery.h"
+#include "sensors/airspeed.h"
 
 #include "io/beeper.h"
 #include "io/display.h"
@@ -431,6 +432,9 @@ typedef enum {
 #if defined(BARO) || defined(SONAR)
     CALCULATE_ALTITUDE_TASK,
 #endif
+#ifdef AIRSPEED
+     //UPDATE_AIRSPEED_TASK,
+#endif
     UPDATE_DISPLAY_TASK
 } periodicTasks;
 
@@ -479,8 +483,20 @@ void executePeriodicTasks(void)
         }
         break;
 #endif
+//#ifdef AIRSPEED
+//    case UPDATE_AIRSPEED_TASK:
+//        if (sensors(SENSOR_AIRSPEED)) {
+//            //airspeedUpdate(currentTime);
+//        }
+//        break;
+//#endif
 #ifdef DISPLAY
     case UPDATE_DISPLAY_TASK:
+#ifdef AIRSPEED  //Display fuctions freeze if not put here!!!
+        if (sensors(SENSOR_AIRSPEED)) {
+            airspeedUpdate(currentTime);
+        }
+#endif
         if (feature(FEATURE_DISPLAY)) {
             updateDisplay();
         }

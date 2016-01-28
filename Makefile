@@ -275,6 +275,7 @@ HIGHEND_SRC = \
 		   telemetry/smartport.c \
 		   sensors/sonar.c \
 		   sensors/barometer.c \
+		   sensors/airspeed.c \
 		   blackbox/blackbox.c \
 		   blackbox/blackbox_io.c
 
@@ -298,6 +299,7 @@ NAZE_SRC = startup_stm32f10x_md_gcc.S \
 		   drivers/accgyro_mpu6050.c \
 		   drivers/accgyro_mpu6500.c \
 		   drivers/accgyro_spi_mpu6500.c \
+		   drivers/airspeed_ms4525.c \
 		   drivers/adc.c \
 		   drivers/adc_stm32f10x.c \
 		   drivers/barometer_bmp085.c \
