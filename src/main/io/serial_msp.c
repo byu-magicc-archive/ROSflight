@@ -282,7 +282,7 @@ static const char * const boardIdentifier = TARGET_BOARD_IDENTIFIER;
 #define MSP_NAV_STATUS           121    //out message         Returns navigation status
 #define MSP_NAV_CONFIG           122    //out message         Returns navigation parameters
 
-//#define MSP_RAW_AIRSPEED         125    //out message         airspeed, temperature
+#define MSP_RAW_AIRSPEED         125    //out message         airspeed, temperature
 
 #define MSP_SET_RAW_RC           200    //in message          8 rc chan
 #define MSP_SET_RAW_GPS          201    //in message          fix, numsat, lat, lon, alt, speed
@@ -915,11 +915,11 @@ static bool processOutCommand(uint8_t cmdMSP)
         serialize32(0);
 #endif
         break;
-//    case MSP_RAW_AIRSPEED:
-//        headSerialReply(4);
-//        serialize16(airspeedVelocity);
-//        serialize16(airspeedTemp);
-//        break;
+    case MSP_RAW_AIRSPEED:
+        headSerialReply(4);
+        serialize16(airspeedVelocity);
+        serialize16(airspeedTemp);
+        break;
     case MSP_ANALOG:
         headSerialReply(7);
         serialize8((uint8_t)constrain(vbat, 0, 255));
