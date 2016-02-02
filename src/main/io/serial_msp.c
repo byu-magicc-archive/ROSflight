@@ -804,7 +804,7 @@ static bool processOutCommand(uint8_t cmdMSP)
 #else
         serialize16(0);
 #endif
-        serialize16(sensors(SENSOR_ACC) | sensors(SENSOR_BARO) << 1 | sensors(SENSOR_MAG) << 2 | sensors(SENSOR_GPS) << 3 | sensors(SENSOR_SONAR) << 4);
+        serialize16(sensors(SENSOR_ACC) | sensors(SENSOR_BARO) << 1 | sensors(SENSOR_MAG) << 2 | sensors(SENSOR_GPS) << 3 | sensors(SENSOR_SONAR) << 4 | sensors(SENSOR_AIRSPEED) << 5);
         // Serialize the flags in the order we delivered them, ignoring BOXNAMES and BOXINDEXES
         // Requires new Multiwii protocol version to fix
         // It would be preferable to setting the enabled bits based on BOXINDEX.
